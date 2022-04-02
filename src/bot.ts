@@ -5,10 +5,10 @@ import child from "child_process";
 
 if (settings.devMode) {
   var env = "src";
-  console.log("Starting syn ai in dev mode");
+  console.log("Starting trans defender in dev mode");
 } else {
   var env = "build";
-  console.log("Starting syn ai");
+  console.log("Starting trans defender");
 }
 
 let shard = child.fork(`./${env}/discord/shard`);
