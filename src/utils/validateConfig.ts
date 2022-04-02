@@ -3,9 +3,14 @@ import dotenv from "dotenv";
 type Config = {
   tokens: {
     discord: string;
+    discordApp: string;
     mongoDB: string;
     redis: string;
     census: string;
+  };
+  oath: {
+    url: string;
+    port: string;
   };
   devMode: boolean;
   appID: string;
