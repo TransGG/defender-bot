@@ -1,0 +1,8 @@
+node_modules/
+build/*
+config/*
+package-lock.json
+yarn.lock
+notes.txt
+config.env
+deploy notes.txt
