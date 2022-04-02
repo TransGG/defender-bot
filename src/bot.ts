@@ -12,20 +12,10 @@ if (settings.devMode) {
 }
 
 let shard = child.fork(`./${env}/discord/shard`);
-let ps2 = child.fork(`./${env}/planetside/eventsTracker`);
 
 shard.on("exit", (code) => {
   console.log(`discord shard exit with code: ${code}`);
   if (code && code != 0) {
-    ps2.kill();
-    process.exit(code);
-  }
-});
-
-ps2.on("exit", (code) => {
-  console.log(`ps2 exit with code: ${code}`);
-  if (code && code != 0) {
-    shard.kill();
     process.exit(code);
   }
 });
