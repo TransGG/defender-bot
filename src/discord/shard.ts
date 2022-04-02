@@ -2,12 +2,7 @@ import { Intents, Client } from "discord.js";
 import Redis from "redis";
 import SlashLib from "@silver_lily/slash-lib";
 
-import Store from "../utils/store";
-import createCommands from "./createCommands";
-import loadState from "./loadState/loadState";
 import EventScheduler from "../utils/eventScheduler";
-
-import handleInteraction from "./interactions/interactionHandler/interactionHandler";
 
 import validateConfig from "../utils/validateConfig";
 let settings = validateConfig();
@@ -26,7 +21,6 @@ let bot = new Client({
 });
 
 let cache = Redis.createClient({ url: settings.tokens.redis });
-let store = new Store(settings.tokens.mongoDB);
 
 let scheduler = new EventScheduler(10000);
 
@@ -39,14 +33,10 @@ bot.on("ready", async () => {
   }
 
   let commandLib = new SlashLib(bot, debugServer);
-  createCommands(commandLib, cache, store, bot, settings, scheduler);
+
   commandLib.registerCommands();
-
-  loadState(cache, store, scheduler, bot);
 });
 
-bot.on("interactionCreate", async (interaction) => {
-  handleInteraction(interaction, store, cache);
-});
+bot.on("interactionCreate", async (interaction) => {});
 
 bot.login(settings.tokens.discord);

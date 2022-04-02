@@ -27,8 +27,8 @@ function validateConfig() {
 
   assertEnvVarExists("DISCORD_TOKEN");
   assertEnvVarExists("CENSUS_SERVICE_ID");
-  assertEnvVarExists("MONGODB_URL");
-  assertEnvVarExists("REDIS_URL");
+  //  assertEnvVarExists("MONGODB_URL");
+  //  assertEnvVarExists("REDIS_URL");
   assertEnvVarExists("APP_ID");
 
   let adminIds: string[];

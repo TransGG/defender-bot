@@ -1,6 +1,6 @@
 FROM node:current
 
-WORKDIR /usr/src/syn
+WORKDIR /usr/src/transplace-defender
 RUN mkdir build
 
 COPY package.json .
@@ -12,4 +12,4 @@ COPY . .
 
 RUN yarn tsc
 
-CMD node ./build/syn.js
+CMD node ./build/bot.js
