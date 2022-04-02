@@ -1,8 +1,5 @@
 import { Intents, Client } from "discord.js";
 import Redis from "redis";
-import SlashLib from "@silver_lily/slash-lib";
-
-import EventScheduler from "../utils/eventScheduler";
 
 import validateConfig from "../utils/validateConfig";
 let settings = validateConfig();
@@ -22,8 +19,6 @@ let bot = new Client({
 
 let cache = Redis.createClient({ url: settings.tokens.redis });
 
-let scheduler = new EventScheduler(10000);
-
 bot.on("ready", async () => {
   console.log("Connected to discord");
 
@@ -31,10 +26,6 @@ bot.on("ready", async () => {
   if (settings.devMode) {
     debugServer = "743250557187129418";
   }
-
-  let commandLib = new SlashLib(bot, debugServer);
-
-  commandLib.registerCommands();
 });
 
 bot.on("interactionCreate", async (interaction) => {});
