@@ -45,6 +45,7 @@
     "randomstring": "^1.2.1",
     "redis": "^3.1.2",
     "seed-random": "^2.2.0",
+    "snoowrap": "^1.23.0",
     "ws": "^8.1.0"
   },
   "optionalDependencies": {
