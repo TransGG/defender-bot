@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "syndicus ai",
   "main": "./build/bot.js",
+  "type": "module",
   "scripts": {
     "start:dev": "(npm run start:devDeps && nodemon) || nodemon",
     "start:devDeps": "powershell ./startDevDBs.ps1",
