@@ -3,18 +3,16 @@ import dotenv from "dotenv";
 type Config = {
   tokens: {
     discord: string;
-    discordApp: string;
-    mongoDB: string;
-    redis: string;
-    census: string;
+    discordAppId: string;
+    discordAppSecret: string;
+    //mongoDB: string;
+    //redis: string;
   };
   oath: {
     url: string;
     port: string;
   };
   devMode: boolean;
-  appID: string;
-  adminIds: string[];
 };
 
 function assertEnvVarExists(setting: string) {
@@ -27,15 +25,16 @@ function assertEnvVarExists(setting: string) {
 }
 
 function validateConfig() {
-  dotenv.config({ path: "./default.env" });
-  dotenv.config({ path: "./config.env" });
+  dotenv.config({ path: "./config/tokens.env" });
+  dotenv.config({ path: "./config/config.env" });
 
-  assertEnvVarExists("DISCORD_TOKEN");
-  assertEnvVarExists("CENSUS_SERVICE_ID");
-  //  assertEnvVarExists("MONGODB_URL");
-  //  assertEnvVarExists("REDIS_URL");
+  assertEnvVarExists("DISCORD_BOT_TOKEN");
   assertEnvVarExists("APP_ID");
-
+  assertEnvVarExists("APP_SECRET");
+  assertEnvVarExists("MONGODB_URL");
+  assertEnvVarExists("REDIS_URL");
+  assertEnvVarExists("OATH_URL");
+  assertEnvVarExists("OATH_PORT");
   let adminIds: string[];
 
   if (process.env.ADMIN_IDS) {
@@ -46,14 +45,17 @@ function validateConfig() {
 
   const config: Config = {
     tokens: {
-      discord: process.env.DISCORD_TOKEN!,
-      mongoDB: process.env.MONGODB_URL!,
-      redis: process.env.REDIS_URL!,
-      census: process.env.CENSUS_SERVICE_ID!,
+      discord: process.env.DISCORD_BOT_TOKEN!,
+      discordAppId: process.env.APP_ID!,
+      discordAppSecret: process.env.APP_SECRET!,
+      //mongoDB: process.env.MONGODB_URL!,
+      //redis: process.env.REDIS_URL!,
+    },
+    oath: {
+      url: process.env.OATH_URL!,
+      port: process.env.OATH_PORT!,
     },
     devMode: Boolean(process.env.DEV_MODE),
-    appID: process.env.APP_ID!,
-    adminIds: adminIds,
   };
   return config;
 }

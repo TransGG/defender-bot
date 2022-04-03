@@ -17,7 +17,7 @@ let bot = new Client({
   ],
 });
 
-let cache = Redis.createClient({ url: settings.tokens.redis });
+//let cache = Redis.createClient({ url: settings.tokens.redis });
 
 bot.on("ready", async () => {
   console.log("Connected to discord");
