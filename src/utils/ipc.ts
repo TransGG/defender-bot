@@ -1,4 +1,3 @@
-import { MongoServerClosedError } from "mongodb";
 import IPC from "node-ipc";
 
 interface message {
@@ -6,7 +5,7 @@ interface message {
   payload: any;
 }
 
-type msgHandler = (msg: message) => undefined;
+type msgHandler = (msg: message) => any;
 
 class ipcManager {
   private handlers: { [key: string]: msgHandler };
@@ -29,7 +28,7 @@ class ipcManager {
   private _handleMessage(msg: message) {
     let type = msg.type;
     if (this.handlers[type]) {
-      this.handlers[type](msg.payload);
+      this.handlers[type]!(msg.payload);
     }
   }
 
@@ -50,11 +49,12 @@ class ipcManager {
         console.error(
           `Could not connect to ipc server: ${target} while attempting to deliver message: ${message}. \nError: \n${err}`
         );
+        return;
       });
     }
 
     // dispatch message to ipc
-    this.ipc.of[target].emit("message", message);
+    this.ipc.of[target]!.emit("message", message);
   }
 
   public addListener(type: string, handler: msgHandler) {
@@ -63,5 +63,5 @@ class ipcManager {
   }
 }
 
-export { ipcManager, msgHandler };
+export { ipcManager, msgHandler, message };
 export default ipcManager;
