@@ -35,27 +35,22 @@ function validateConfig() {
   assertEnvVarExists("REDIS_URL");
   assertEnvVarExists("OATH_URL");
   assertEnvVarExists("OATH_PORT");
-  let adminIds: string[];
 
-  if (process.env.ADMIN_IDS) {
-    adminIds = JSON.parse(process.env.ADMIN_IDS);
-  } else {
-    adminIds = ["229331045726552066", "861353197952172102"];
-  }
+  let env: any = process.env;
 
   const config: Config = {
     tokens: {
-      discord: process.env.DISCORD_BOT_TOKEN!,
-      discordAppId: process.env.APP_ID!,
-      discordAppSecret: process.env.APP_SECRET!,
+      discord: env.DISCORD_BOT_TOKEN!,
+      discordAppId: env.APP_ID!,
+      discordAppSecret: env.APP_SECRET!,
       //mongoDB: process.env.MONGODB_URL!,
       //redis: process.env.REDIS_URL!,
     },
     oath: {
-      url: process.env.OATH_URL!,
-      port: process.env.OATH_PORT!,
+      url: env.OATH_URL!,
+      port: env.OATH_PORT!,
     },
-    devMode: Boolean(process.env.DEV_MODE),
+    devMode: Boolean(env.DEV_MODE),
   };
   return config;
 }
