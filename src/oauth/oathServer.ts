@@ -46,13 +46,15 @@ app.get("/", async (req, response) => {
 
   if (!code || typeof code != "string") {
     ipScores[ip] += 3;
+    return;
   }
 
-  /*
   if (code) {
     try {
-      oauth.tokenRequest({
+      let dat = await oauth.tokenRequest({
         code: code,
+        scope: scopes,
+        grantType: "authorization_code",
       });
 
       console.log(oauthData);
@@ -60,7 +62,6 @@ app.get("/", async (req, response) => {
       console.error(error);
     }
   }
-  */
 
   return response.sendFile("index.html", {
     root: ".",
