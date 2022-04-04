@@ -7,7 +7,7 @@
   "scripts": {
     "start:dev": "node --experimental-specifier-resolution=node --loader ts-node/esm ./src/server.ts",
     "build": "rimraf ./build && tsc",
-    "start": "node build/bot.js"
+    "start": "node build/server.js"
   },
   "keywords": [],
   "private": true,
