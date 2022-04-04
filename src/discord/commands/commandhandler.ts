@@ -1,4 +1,6 @@
 import type { CommandInteraction } from "discord.js";
+import type { Collection } from "mongodb";
+import type { Subreddit } from "../../typings/mongo.js";
 import type { ipcManager, message } from "../../utils/ipc.js";
 
 interface Wrapper {
@@ -15,7 +17,12 @@ interface analysis {
   score: number;
   analysedOn: string;
 }
-async function handleCommand(this: Wrapper, cmd: CommandInteraction, ipc: ipcManager) {
+async function handleCommand(
+  this: Wrapper,
+  cmd: CommandInteraction,
+  ipc: ipcManager,
+  subreddits: Collection<Subreddit>
+) {
   switch (cmd.commandName) {
     case "ping":
       {
@@ -69,6 +76,23 @@ async function handleCommand(this: Wrapper, cmd: CommandInteraction, ipc: ipcMan
       };
 
       cmd.followUp({ embeds: [embed] });
+      break;
+    }
+    case "subreddit": {
+      let deffered = cmd.deferReply({ ephemeral: true });
+
+      let name = cmd.options.getString("subreddit", true);
+      let weight = cmd.options.getNumber("weight", true);
+
+      await subreddits.updateOne({ name: name }, { $set: { name: name, weight: weight } }, { upsert: true });
+      await deffered;
+
+      cmd.followUp({ content: `Set weight of /r/${name} to ${weight}` });
+
+      break;
+    }
+    default: {
+      cmd.reply({ content: "Unknown Command", ephemeral: true });
     }
   }
 }
