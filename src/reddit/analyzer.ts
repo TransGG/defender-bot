@@ -23,15 +23,11 @@ class Analyzer {
   async getSubs(subreddits: Collection<Subreddit>) {
     // pull subs from mongoDB
     let subsArray = await subreddits.find().toArray();
-
-    console.log(`fetched: ${subsArray.length} subs`);
-
     var subsUpdated: { [key: string]: number } = {};
     let currentsub: WithId<Subreddit>;
     for (let i = 0; i < subsArray.length; i++) {
       currentsub = subsArray[i]!;
       subsUpdated[currentsub!.name] = currentsub!.weight;
-      console.log(`added ${currentsub.name} to list with weight ${currentsub.weight}`);
     }
     return subsUpdated;
   }

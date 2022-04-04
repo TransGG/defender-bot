@@ -87,6 +87,8 @@ async function handleCommand(
       await subreddits.updateOne({ name: name }, { $set: { name: name, weight: weight } }, { upsert: true });
       await deffered;
 
+      console.log(`set weight of ${name} to ${weight}`);
+
       cmd.followUp({ content: `Set weight of /r/${name} to ${weight}` });
 
       break;
