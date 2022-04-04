@@ -1,4 +1,4 @@
-import express from "express";
+import express, { response } from "express";
 import url from "url";
 import fetch from "node-fetch";
 import { CloudflareIP } from "@cylution/is-cloudflare-ip";
@@ -9,6 +9,7 @@ await cloudflareip.update(3600000);
 import { validateConfig, Config } from "../utils/validateConfig.js";
 import { MongoClient } from "mongodb";
 import type { connection } from "../typings/connection.js";
+import forbidden from "./forbidden/forbidden.js";
 //import forbidden from "./forbidden/forbidden.js";
 
 let config: Config = validateConfig();
@@ -46,20 +47,23 @@ setInterval(() => {
 }, ipScoreTimer * 60 * 1000);
 
 const app = express();
+
+/*
+403 request not proxied via cloudflare
+app.get("/", async (req, response, next) => {
+  let rawip = req.ip;
+  if (!cloudflareip.validate(rawip)) {
+    response.status(403).send(forbidden);
+    return;
+  }
+
+  next();
+});
+*/
+
 app.get("/oath2", async (req, response) => {
   try {
-    let rawip = req.ip;
-
-    /*
-    if (!cloudflareip.validate(rawip)) {
-      response.status(403).send(forbidden);
-      return;
-    }
-
     var ip = req.headers["cf-connecting-ip"] as string;
-    */
-    // #DEBUG
-    var ip = rawip;
 
     if (ipScores[ip]) {
       if (ipScores[ip]! > 6) {
