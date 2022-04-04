@@ -12,7 +12,7 @@ const command: ChatInputApplicationCommandData = {
 
 const permissions: ApplicationCommandPermissionData[] = [
   { id: "959391087858970636", type: "ROLE", permission: true },
-  { id: "959564037664936026", type: "ROLE", permission: true },
+  { id: "960477357599244308", type: "ROLE", permission: true },
 ];
 
 const exp = { command: command, permissions: permissions };
