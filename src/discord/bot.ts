@@ -1,8 +1,11 @@
 import { Intents, Client } from "discord.js";
-import Redis from "redis";
+//import Redis from "redis";
 
+import { ipcManager } from "../utils/ipc.js";
 import validateConfig from "../utils/validateConfig";
 let settings = validateConfig();
+
+let ipc = new ipcManager("discord");
 
 let bot = new Client({
   intents: [
@@ -30,4 +33,4 @@ bot.on("ready", async () => {
 
 bot.on("interactionCreate", async (interaction) => {});
 
-bot.login(settings.tokens.discord);
+bot.login(settings.tokens.discord.token);

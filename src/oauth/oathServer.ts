@@ -1,12 +1,17 @@
 import express from "express";
 import url from "url";
 import fetch from "node-fetch";
+import { CloudflareIP } from "@cylution/is-cloudflare-ip";
+
+let cloudflareip = new CloudflareIP();
+await cloudflareip.update(3600000);
 
 import { validateConfig, Config } from "../utils/validateConfig.js";
+import { MongoClient } from "mongodb";
+import type { connection } from "../typings/connection.js";
+//import forbidden from "./forbidden/forbidden.js";
 
 let config: Config = validateConfig();
-
-const app = express();
 
 console.log("redr uri: " + config.oath.url);
 
@@ -20,6 +25,15 @@ interface oauthData {
   scope: string;
 }
 
+var mongoClient = new MongoClient(config.tokens.mongoDB);
+
+let mongodb = mongoClient.db("trans-defender");
+let users = mongodb.collection("users");
+
+users;
+
+const endpoint = "https://discord.com/api/v9/";
+
 const ipScoreTimer = 10; // in minutes
 setInterval(() => {
   let ips = Object.keys(ipScores);
@@ -31,9 +45,22 @@ setInterval(() => {
   }
 }, ipScoreTimer * 60 * 1000);
 
+const app = express();
 app.get("/oath2", async (req, response) => {
   try {
-    let ip = req.ip;
+    let rawip = req.ip;
+
+    /*
+    if (!cloudflareip.validate(rawip)) {
+      response.status(403).send(forbidden);
+      return;
+    }
+
+    var ip = req.headers["cf-connecting-ip"] as string;
+    */
+    // #DEBUG
+    var ip = rawip;
+
     if (ipScores[ip]) {
       if (ipScores[ip]! > 6) {
         // drop connection
@@ -59,11 +86,11 @@ app.get("/oath2", async (req, response) => {
     console.log(`got oath2 code: ${code}`);
 
     try {
-      let oathResult = await fetch("https://discord.com/api/v9/oauth2/token", {
+      let oathResult = await fetch(`${endpoint}oauth2/token`, {
         method: "POST",
         body: new url.URLSearchParams({
-          client_id: config.tokens.discordAppId,
-          client_secret: config.tokens.discordAppSecret,
+          client_id: config.tokens.discord.appId,
+          client_secret: config.tokens.discord.appSecret,
           code: code,
           grant_type: "authorization_code",
           redirect_uri: config.oath.url,
@@ -91,13 +118,57 @@ app.get("/oath2", async (req, response) => {
     }
 
     try {
-      const userResult = await fetch("https://discord.com/api/users/@me", {
+      const userResult = await fetch(`${endpoint}users/@me`, {
+        method: "GET",
         headers: {
           authorization: `${oauthData.token_type} ${oauthData.access_token}`,
         },
       });
 
-      console.log(`got user ${JSON.stringify(await userResult.json(), null, 2)}`);
+      if (!userResult.ok) {
+        ipScores[ip] += 4;
+        response.statusCode = 403;
+        response.send("Please try again in a few minutes");
+        return;
+      }
+
+      let user = await userResult.json();
+
+      console.log(`got user ${JSON.stringify(user, null, 2)}`);
+
+      const connectionsResult = await fetch(`${endpoint}users/@me/connections`, {
+        method: "GET",
+        headers: {
+          authorization: `${oauthData.token_type} ${oauthData.access_token}`,
+        },
+      });
+
+      let connections: connection[] = await connectionsResult.json();
+
+      if (!Array.isArray(connections)) {
+        ipScores[ip] += 4;
+        response.statusCode = 403;
+        response.send("Please try again in a few minutes.");
+      }
+
+      let reddit: connection | false = (() => {
+        for (let i = 0; i < connections.length; i++) {
+          if (connections[i]!.type == "reddit") {
+            return connections[i]!;
+          }
+        }
+        return false;
+      })();
+
+      if (!reddit) {
+        ipScores[ip] += 4;
+        response.statusCode = 401;
+        response.send("You must connect your discord to your reddit.");
+      }
+
+      console.log(`reddit: ${JSON.stringify(reddit)}`);
+
+      //users.insertOne(user);
     } catch (error) {
       console.error("oath2 error while requesting user connections: " + error);
       ipScores[ip] += 3;

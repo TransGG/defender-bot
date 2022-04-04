@@ -2,10 +2,18 @@ import dotenv from "dotenv";
 
 type Config = {
   tokens: {
-    discord: string;
-    discordAppId: string;
-    discordAppSecret: string;
-    //mongoDB: string;
+    discord: {
+      token: string;
+      appId: string;
+      appSecret: string;
+    };
+    mongoDB: string;
+    reddit: {
+      username: string;
+      pass: string;
+      id: string;
+      secret: string;
+    };
     //redis: string;
   };
   oath: {
@@ -36,15 +44,28 @@ function validateConfig() {
   assertEnvVarExists("OATH_URL");
   assertEnvVarExists("OATH_PORT");
 
+  assertEnvVarExists("REDDIT_ID");
+  assertEnvVarExists("REDDIT_SECRET");
+  assertEnvVarExists("REDDIT_USERNAME");
+  assertEnvVarExists("REDDIT_PASS");
+
   let env: any = process.env;
 
   const config: Config = {
     tokens: {
-      discord: env.DISCORD_BOT_TOKEN!,
-      discordAppId: env.APP_ID!,
-      discordAppSecret: env.APP_SECRET!,
-      //mongoDB: process.env.MONGODB_URL!,
-      //redis: process.env.REDIS_URL!,
+      discord: {
+        token: env.DISCORD_BOT_TOKEN!,
+        appId: env.APP_ID!,
+        appSecret: env.APP_SECRET!,
+      },
+      mongoDB: env.MONGODB_URL!,
+      reddit: {
+        id: env.REDDIT_ID,
+        username: env.REDDIT_USERNAME,
+        secret: env.REDDIT_SECRET,
+        pass: env.REDDIT_PASS,
+      },
+      //redis: env.REDIS_URL!,
     },
     oath: {
       url: env.OATH_URL!,

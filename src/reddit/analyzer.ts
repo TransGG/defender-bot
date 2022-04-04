@@ -1,15 +1,23 @@
-import { ipcManager, message } from "../utils/ipc.js";
 import snoowrap from "snoowrap";
+
+//import type { message } from "../utils/ipc.js";
+import { ipcManager, message } from "../utils/ipc.js";
+import getConfig from "../utils/validateConfig.js";
 
 // reddit threat rating thread
 
+const config = getConfig();
+
 const reddit = new snoowrap({
-  userAgent: "node:transplace-defender:v0.0.1 (by /r/TransPlace)",
-  accessToken: "1536265481256-awrj-mFj0ryCtju62Ne2HcoWWCZV7w",
+  userAgent: "transplace-defender:v0.1.0",
+  clientId: config.tokens.reddit.id,
+  clientSecret: config.tokens.reddit.secret,
+  username: config.tokens.reddit.username,
+  password: config.tokens.reddit.pass,
 });
 let ipc = new ipcManager("threat-rating");
 
-const subs = {
+let subs = {
   traaaaaaannnnnnnnnns: 10,
   transgendercirclejerk: 10,
   lgbt: 5,
@@ -106,7 +114,7 @@ const analyzeAccount = async ({ type: _, payload: username }: message) => {
   score = multiplyBasedOnAge(score, redditAccountData.age);
 
   console.log(`${username} has a score of ${score}`);
-  ipc.send("threat-rating", {
+  ipc.send("discord", {
     type: "threat-rating",
     payload: {
       username,
@@ -117,5 +125,4 @@ const analyzeAccount = async ({ type: _, payload: username }: message) => {
 
 ipc.addListener("analyze", analyzeAccount);
 
-// Info: TESTING STUFF BELOW
-analyzeAccount({ type: "analyze", payload: "Minion3665" });
+console.log("reddit threat analizer loaded");

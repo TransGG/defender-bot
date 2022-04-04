@@ -16,6 +16,7 @@ class ipcManager {
     this.ipc = IPC;
     this.ipc.config.appspace = "transplace-defender";
     this.ipc.config.id = id;
+    this.ipc.config.silent = true;
 
     let msgHandler = this._handleMessage.bind(this);
 
