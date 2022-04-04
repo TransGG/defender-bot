@@ -1,7 +1,7 @@
 {
-  "name": "syn-ai",
+  "name": "transplace-defender",
   "version": "1.0.0",
-  "description": "syndicus ai",
+  "description": "transplace defence bot",
   "main": "./build/bot.js",
   "type": "module",
   "scripts": {

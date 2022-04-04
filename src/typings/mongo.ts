@@ -1,6 +1,6 @@
 import type { Snowflake } from "discord.js";
 
-export interface users {
+export interface User {
   id: Snowflake;
   username: string;
   avatar: string;
@@ -12,4 +12,9 @@ export interface users {
   accent_color: number;
   locale: string;
   mfa_enabled: true;
+}
+
+export interface Subreddit {
+  name: string;
+  weight: number;
 }

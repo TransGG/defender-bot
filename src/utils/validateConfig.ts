@@ -14,13 +14,13 @@ type Config = {
       id: string;
       secret: string;
     };
-    //redis: string;
   };
   oath: {
     url: string;
     port: string;
   };
-  devMode: boolean;
+  guildId: string;
+  devMode?: boolean;
 };
 
 function assertEnvVarExists(setting: string) {
@@ -36,22 +36,26 @@ function validateConfig() {
   dotenv.config({ path: "./config/tokens.env" });
   dotenv.config({ path: "./config/config.env" });
 
+  // tokens
   assertEnvVarExists("DISCORD_BOT_TOKEN");
   assertEnvVarExists("APP_ID");
   assertEnvVarExists("APP_SECRET");
   assertEnvVarExists("MONGODB_URL");
-  assertEnvVarExists("REDIS_URL");
-  assertEnvVarExists("OATH_URL");
-  assertEnvVarExists("OATH_PORT");
-
   assertEnvVarExists("REDDIT_ID");
   assertEnvVarExists("REDDIT_SECRET");
   assertEnvVarExists("REDDIT_USERNAME");
   assertEnvVarExists("REDDIT_PASS");
 
+  // oath
+  assertEnvVarExists("OATH_URL");
+  assertEnvVarExists("OATH_PORT");
+
+  // server
+  assertEnvVarExists("GUILD_ID");
+
   let env: any = process.env;
 
-  const config: Config = {
+  let config: Config = {
     tokens: {
       discord: {
         token: env.DISCORD_BOT_TOKEN!,
@@ -65,14 +69,15 @@ function validateConfig() {
         secret: env.REDDIT_SECRET,
         pass: env.REDDIT_PASS,
       },
-      //redis: env.REDIS_URL!,
     },
     oath: {
       url: env.OATH_URL!,
       port: env.OATH_PORT!,
     },
+    guildId: env.GUILD_ID!,
     devMode: Boolean(env.DEV_MODE),
   };
+
   return config;
 }
 

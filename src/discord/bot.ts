@@ -3,7 +3,9 @@ import { Intents, Client } from "discord.js";
 
 import { ipcManager } from "../utils/ipc.js";
 import validateConfig from "../utils/validateConfig";
-let settings = validateConfig();
+import handleCommand from "./commands/commandhandler.js";
+import registerCommands from "./commands/registerCommands.js";
+let config = validateConfig();
 
 let ipc = new ipcManager("discord");
 
@@ -25,12 +27,14 @@ let bot = new Client({
 bot.on("ready", async () => {
   console.log("Connected to discord");
 
-  let debugServer;
-  if (settings.devMode) {
-    debugServer = "743250557187129418";
+  await registerCommands(bot, config.guildId);
+  console.log(`Registered Commands to guild: ${config.guildId}`);
+});
+
+bot.on("interactionCreate", async (interaction) => {
+  if (interaction.isCommand()) {
+    handleCommand(interaction, ipc);
   }
 });
 
-bot.on("interactionCreate", async (interaction) => {});
-
-bot.login(settings.tokens.discord.token);
+bot.login(config.tokens.discord.token);
