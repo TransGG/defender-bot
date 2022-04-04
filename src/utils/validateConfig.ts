@@ -47,8 +47,8 @@ function validateConfig() {
   assertEnvVarExists("REDDIT_PASS");
 
   // oath
-  assertEnvVarExists("OATH_URL");
-  assertEnvVarExists("OATH_PORT");
+  assertEnvVarExists("OAUTH_URL");
+  assertEnvVarExists("OAUTH_PORT");
 
   // server
   assertEnvVarExists("GUILD_ID");
@@ -71,8 +71,8 @@ function validateConfig() {
       },
     },
     oath: {
-      url: env.OATH_URL!,
-      port: env.OATH_PORT!,
+      url: env.OAUTH_URL!,
+      port: env.OAUTH_PORT!,
     },
     guildId: env.GUILD_ID!,
     devMode: Boolean(env.DEV_MODE),
