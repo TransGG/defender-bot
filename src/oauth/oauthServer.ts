@@ -2,14 +2,14 @@ import express from "express";
 import url from "url";
 import fetch from "node-fetch";
 import { CloudflareIP } from "@cylution/is-cloudflare-ip";
+import { MongoClient } from "mongodb";
 
 let cloudflareip = new CloudflareIP();
 await cloudflareip.update(3600000);
 
 import { validateConfig, Config } from "../utils/validateConfig.js";
-import { MongoClient } from "mongodb";
 import type { connection } from "../typings/connection.js";
-//import forbidden from "./forbidden/forbidden.js";
+import forbidden from "./forbidden/forbidden.js";
 
 let config: Config = validateConfig();
 
@@ -49,7 +49,7 @@ const app = express();
 
 // 403 request not proxied via cloudflare
 // uncomment this and line forbidden import
-/*
+
 app.get("/", async (req, response, next) => {
   let rawip = req.ip;
   if (!cloudflareip.validate(rawip)) {
@@ -59,7 +59,6 @@ app.get("/", async (req, response, next) => {
 
   next();
 });
-*/
 
 app.get("/oath2", async (req, response) => {
   try {

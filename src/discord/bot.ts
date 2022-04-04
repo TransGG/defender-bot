@@ -2,7 +2,7 @@ import { Intents, Client } from "discord.js";
 //import Redis from "redis";
 
 import { ipcManager } from "../utils/ipc.js";
-import validateConfig from "../utils/validateConfig";
+import validateConfig from "../utils/validateConfig.js";
 import handleCommand from "./commands/commandhandler.js";
 import registerCommands from "./commands/registerCommands.js";
 let config = validateConfig();

@@ -1,4 +1,4 @@
-import validateConfig from "./utils/validateConfig";
+import validateConfig from "./utils/validateConfig.js";
 let settings = validateConfig();
 
 import startFnFactory from "./utils/threadStartFactory.js";
