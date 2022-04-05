@@ -1,9 +1,12 @@
 import type { ApplicationCommandPermissionData, ChatInputApplicationCommandData } from "discord.js";
 
 const command: ChatInputApplicationCommandData = {
-  name: "analyze",
-  description: "Analyzes a users reddit account history",
-  options: [{ name: "user", description: "reddit account username to analyze", type: "STRING", required: true }],
+  name: "modal",
+  description: "Creates a modal",
+  options: [
+    { name: "user", description: "reddit account username to analyze", type: "STRING", required: true },
+    { name: "user", description: "reddit account username to analyze", type: "STRING", required: true },
+  ],
   defaultPermission: false,
 };
 

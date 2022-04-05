@@ -57,7 +57,7 @@ async function handleCommand(
         type: "rich",
         title: `Analysis Results:`,
         description: "",
-        color: 0x0d00ff,
+        color: 0xff4df9,
         fields: [
           {
             name: `Username:`,

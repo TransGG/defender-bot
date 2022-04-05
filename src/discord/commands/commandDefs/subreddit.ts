@@ -15,6 +15,6 @@ const permissions: ApplicationCommandPermissionData[] = [
   { id: "960477357599244308", type: "ROLE", permission: true },
 ];
 
-const exp = { command: command, permissions: permissions };
+const exporter = { command: command, permissions: permissions };
 
-export default exp;
+export default exporter;
