@@ -71,7 +71,7 @@ async function handleCommand(
           },
         ],
         footer: {
-          text: `Analysied on: ${analysis.analysedOn}`,
+          text: `Analyzed on: ${analysis.analysedOn}`,
         },
       };
 
