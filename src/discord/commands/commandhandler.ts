@@ -3,6 +3,7 @@ import type { Collection } from "mongodb";
 import type { Subreddit } from "../../typings/mongo.js";
 import type { ipcManager } from "../../utils/ipc.js";
 import analyze from "./commandHandlers/analyze.js";
+import subreddit from "./commandHandlers/subreddit.js";
 
 interface Wrapper {
   awaitingAnalysis: { [key: string]: CommandInteraction[] };
@@ -29,18 +30,7 @@ async function handleCommand(
       break;
     }
     case "subreddit": {
-      let deffered = cmd.deferReply({ ephemeral: true });
-
-      let name = cmd.options.getString("subreddit", true);
-      let weight = cmd.options.getNumber("weight", true);
-
-      await subreddits.updateOne({ name: name }, { $set: { name: name, weight: weight } }, { upsert: true });
-      await deffered;
-
-      console.log(`set weight of ${name} to ${weight}`);
-
-      cmd.followUp({ content: `Set weight of /r/${name} to ${weight}` });
-
+      subreddit(cmd, subreddits);
       break;
     }
     default: {
