@@ -11,9 +11,10 @@ const command: ChatInputApplicationCommandData = {
 };
 
 const permissions: ApplicationCommandPermissionData[] = [
+  // dev server dev
   { id: "959391087858970636", type: "ROLE", permission: true },
-  { id: "960451435881963550", type: "ROLE", permission: true },
-  { id: "959916105294569503", type: "ROLE", permission: true },
+  // head staff
+  { id: "960681891806195753", type: "ROLE", permission: true },
 ];
 
 const exporter = { command: command, permissions: permissions };

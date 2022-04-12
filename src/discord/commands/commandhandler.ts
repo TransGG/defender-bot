@@ -1,7 +1,8 @@
 import type { CommandInteraction } from "discord.js";
 import type { Collection } from "mongodb";
 import type { Subreddit } from "../../typings/mongo.js";
-import type { ipcManager, message } from "../../utils/ipc.js";
+import type { ipcManager } from "../../utils/ipc.js";
+import analyze from "./commandHandlers/analyze.js";
 
 interface Wrapper {
   awaitingAnalysis: { [key: string]: CommandInteraction[] };
@@ -11,12 +12,6 @@ let wrapper: Wrapper = {
   awaitingAnalysis: {},
 };
 
-interface analysis {
-  success: boolean;
-  username: string;
-  score: number;
-  analysedOn: string;
-}
 async function handleCommand(
   this: Wrapper,
   cmd: CommandInteraction,
@@ -30,52 +25,7 @@ async function handleCommand(
       }
       break;
     case "analyze": {
-      let deffered = cmd.deferReply({ ephemeral: true });
-
-      let username = cmd.options.getString("user", true);
-
-      console.log(`analysing user: ${username}`);
-
-      let msg: message = { type: "analysis-request", payload: username };
-      let analysis: analysis | undefined = (await ipc.query("threat-rating", msg, 10000))?.payload;
-
-      console.log("got analysis");
-
-      if (!analysis) {
-        await deffered;
-        cmd.followUp({ content: `Failed to analyze ${username}` });
-        return;
-      }
-
-      if (!analysis.success) {
-        await deffered;
-        cmd.followUp({ content: `Failed to analyze ${username}` });
-        return;
-      }
-
-      let embed = {
-        type: "rich",
-        title: `Analysis Results:`,
-        description: "",
-        color: 0xff4df9,
-        fields: [
-          {
-            name: `Username:`,
-            value: `${username}`,
-            inline: true,
-          },
-          {
-            name: `Score`,
-            value: `${analysis.score}`,
-            inline: true,
-          },
-        ],
-        footer: {
-          text: `Analyzed on: ${analysis.analysedOn}`,
-        },
-      };
-
-      cmd.followUp({ embeds: [embed] });
+      analyze(cmd, ipc);
       break;
     }
     case "subreddit": {
