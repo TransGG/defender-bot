@@ -1,4 +1,11 @@
-import type { ApplicationCommandPermissionData, ChatInputApplicationCommandData, Client, Snowflake } from "discord.js";
+import type {
+  ApplicationCommandManager,
+  ApplicationCommandPermissionData,
+  ChatInputApplicationCommandData,
+  Client,
+  GuildApplicationCommandManager,
+  Snowflake,
+} from "discord.js";
 
 // import commands
 import analyze from "./commandDefs/analyse.js";
@@ -10,7 +17,10 @@ class CommandRegister {
   constructor() {
     this.commands = [];
   }
-  async addCmd(cmdOpts: { command: ChatInputApplicationCommandData; permissions?: ApplicationCommandPermissionData[] }) {
+  async addCmd(cmdOpts: {
+    command: ChatInputApplicationCommandData;
+    permissions?: ApplicationCommandPermissionData[];
+  }) {
     console.log("adding command: " + cmdOpts.command.name);
     this.commands.push(cmdOpts.command);
     if (cmdOpts.permissions) {
@@ -19,24 +29,27 @@ class CommandRegister {
   }
 }
 
-async function registerCommands(bot: Client<true>, serverId: Snowflake) {
-  let guild = await bot.guilds.fetch(serverId);
-
-  let cmdManager = guild.commands;
+async function registerCommands(bot: Client<true>, serverId?: Snowflake) {
+  if (serverId) {
+    let guild = await bot.guilds.fetch(serverId);
+    var cmdManager: GuildApplicationCommandManager | ApplicationCommandManager = guild.commands;
+  } else {
+    var cmdManager: GuildApplicationCommandManager | ApplicationCommandManager = bot.application.commands;
+  }
 
   let commandRegister = new CommandRegister();
 
   commandRegister.addCmd(analyze);
   commandRegister.addCmd(subreddit);
 
-  let cmds = await cmdManager.set(commandRegister.commands);
+  await cmdManager.set(commandRegister.commands);
 
-  cmds.forEach((cmd) => {
-    let perms = commandRegister.permissions[cmd.name];
-    if (perms) {
-      cmd.permissions.set({ permissions: perms });
-    }
-  });
+  //cmds.forEach((cmd) => {
+  //  let perms = commandRegister.permissions[cmd.name];
+  //  if (perms) {
+  //    cmd.permissions.set({ permissions: perms });
+  //  }
+  //});
 }
 
 export default registerCommands;
