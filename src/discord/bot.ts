@@ -37,6 +37,7 @@ import registerCommands from "./commands/registerCommands.js";
     console.log("Connected to discord");
 
     await registerCommands(bot, config.guildId);
+    await registerCommands(bot, "783192959755616257");
     console.log(`Registered Commands to guild: ${config.guildId}`);
   });
 
