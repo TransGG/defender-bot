@@ -9,3 +9,4 @@ oauth.env
 deploy notes.txt
 yarn-error.log
 .env
+.history/
