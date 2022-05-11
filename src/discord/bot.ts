@@ -20,6 +20,7 @@ import registerCommands from "./commands/registerCommands.js";
 
   let bot = new Client({
     intents: [
+      Intents.FLAGS.GUILD_MEMBERS,
       Intents.FLAGS.GUILDS,
       Intents.FLAGS.GUILD_MESSAGES,
       Intents.FLAGS.GUILD_WEBHOOKS,
@@ -37,7 +38,6 @@ import registerCommands from "./commands/registerCommands.js";
     console.log("Connected to discord");
 
     await registerCommands(bot, config.guildId);
-    await registerCommands(bot, "783192959755616257");
     console.log(`Registered Commands to guild: ${config.guildId}`);
   });
 

@@ -4,6 +4,7 @@ import type { Subreddit } from "../../typings/mongo.js";
 import type { ipcManager } from "../../utils/ipc.js";
 import analyze from "./commandHandlers/analyze.js";
 import subreddit from "./commandHandlers/subreddit.js";
+import massKickUnverified from "./commandHandlers/mass-kick-unverified.js";
 
 interface Wrapper {
   awaitingAnalysis: { [key: string]: CommandInteraction[] };
@@ -31,6 +32,10 @@ async function handleCommand(
     }
     case "subreddit": {
       subreddit(cmd, subreddits);
+      break;
+    }
+    case "mass-kick-unverified": {
+      massKickUnverified(cmd);
       break;
     }
     default: {

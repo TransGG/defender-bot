@@ -8,4 +8,4 @@ token.env
 oauth.env
 deploy notes.txt
 yarn-error.log
-
+.env

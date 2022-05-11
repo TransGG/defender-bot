@@ -10,6 +10,7 @@ import type {
 // import commands
 import analyze from "./commandDefs/analyse.js";
 import subreddit from "./commandDefs/subreddit.js";
+import massKickUnverified from "./commandDefs/mass-kick-unverified.js";
 
 class CommandRegister {
   commands: ChatInputApplicationCommandData[] = [];
@@ -41,6 +42,7 @@ async function registerCommands(bot: Client<true>, serverId?: Snowflake) {
 
   commandRegister.addCmd(analyze);
   commandRegister.addCmd(subreddit);
+  commandRegister.addCmd(massKickUnverified)
 
   await cmdManager.set(commandRegister.commands);
 
